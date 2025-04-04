@@ -55,5 +55,32 @@ class Cliente :
     def __str__(self):
         return f"Cliente: {self.nome} | Pontos: {self.pontos_fidelidade}"
     
+class Pedido :
+    def __init__(self, cliente : Cliente, produto : Produto, quantidade, status):
+        if status.lower() not in ["pendente", "processando", "Entregue"] :
+            raise ValueError ("Status inválido")
+        
+        self.cliente = cliente
+        self.produto = produto
+        self.quantidade : int = quantidade
+        self.status : str = status
 
+    def calcular_total (self):
+        return self.preco * self.quantidade * self.produto.preco
 
+    def calcular_peso_total (self):
+        return self.quantidade * self.produto.peso_kg
+    
+    def atualizar_status (self, novo_status):
+        if novo_status.lower() in ["pendente", "processando", "entregue"]:
+            if self.status is novo_status :
+                raise ValueError("Status igual ao atual")
+            elif self.status is "Entregue"and novo_status is "Pendente" :
+                raise ValueError("O pedido não pode voltar a ser pendente depois de ser entregue!")
+    
+    def cancelar_pedido(self):
+        if self.status is "pendente" :
+            if self.status is "pendente":
+                self.status = "cancelado"
+            else:
+                raise ValueError("Somente pedidos pendentes podem ser cancelados")
